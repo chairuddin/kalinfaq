@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Infaq</title>
+    <style>
+        /* Tema: Hitam (Background), Putih (Card), Oranye (Aksen) */
+        body {
+            background-color: #121212; /* Hitam gelap */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .calculator-card {
+            background-color: #ffffff; /* Putih */
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(255, 152, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            border-top: 6px solid #ff8c00; /* Oranye */
+        }
+
+        h2 {
+            color: #121212; /* Hitam */
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #333333;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            border-color: #ff8c00; /* Oranye saat diklik */
+            outline: none;
+        }
+
+        button {
+            background-color: #ff8c00; /* Oranye */
+            color: #ffffff;
+            border: none;
+            padding: 14px;
+            width: 100%;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #e07b00; /* Oranye agak gelap saat dihover */
+        }
+
+        /* Area Hasil */
+        .result-container {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #f9f9f9; /* Putih keabuan agar kontras dengan card */
+            border-left: 5px solid #ff8c00; /* Aksen oranye */
+            border-radius: 6px;
+            display: none; /* Disembunyikan sampai tombol ditekan */
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 15px;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px dashed #ccc;
+            font-weight: bold;
+            font-size: 18px;
+            color: #ff8c00; /* Oranye untuk total */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calculator-card">
+        <h2>Kalkulator Infaq</h2>
+        
+        <div class="form-group">
+            <label for="income">Penghasilan Bulanan (Gross)</label>
+            <input type="number" id="income" placeholder="Contoh: 8500000" min="0" required>
+        </div>
+        
+        <button onclick="calculateInfaq()">Hitung Infaq</button>
+
+        <div class="result-container" id="resultBox">
+            <div class="result-row">
+                <span>ITB (Fix):</span>
+                <span id="resItb">Rp 0</span>
+            </div>
+            <div class="result-row">
+                <span>IWB:</span>
+                <span id="resIwb">Rp 0</span>
+            </div>
+            <div class="result-row">
+                <span>SS (1%):</span>
+                <span id="resSs">Rp 0</span>
+            </div>
+            <div class="total-row">
+                <span>Total Infaq:</span>
+                <span id="resTotal">Rp 0</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fungsi untuk format angka jadi Rupiah (contoh: Rp 50.000)
+        function formatRupiah(angka) {
+            return new Intl.NumberFormat('id-ID', { 
+                style: 'currency', 
+                currency: 'IDR', 
+                minimumFractionDigits: 0 
+            }).format(angka);
+        }
+
+        function calculateInfaq() {
+            // Ambil nilai dari input
+            const incomeInput = document.getElementById('income').value;
+            
+            // Validasi jika kosong atau minus
+            if (incomeInput === '' || incomeInput < 0) {
+                alert('Silakan masukkan nominal penghasilan yang valid.');
+                return;
+            }
+
+            const income = parseFloat(incomeInput);
+
+            // 1. Kalkulasi ITB (Fix 50.000)
+            const itb = 50000;
+
+            // 2. Kalkulasi IWB
+            let iwb = 0;
+            if (income < 8000000) {
+                iwb = income * 0.015; // 1,5%
+            } else {
+                iwb = income * 0.04;  // 4%
+            }
+
+            // 3. Kalkulasi SS (1%)
+            const ss = income * 0.01;
+
+            // Total Keseluruhan
+            const total = itb + iwb + ss;
+
+            // Tampilkan ke layar
+            document.getElementById('resItb').innerText = formatRupiah(itb);
+            document.getElementById('resIwb').innerText = formatRupiah(iwb);
+            document.getElementById('resSs').innerText = formatRupiah(ss);
+            document.getElementById('resTotal').innerText = formatRupiah(total);
+
+            // Munculkan kotak hasil
+            document.getElementById('resultBox').style.display = 'block';
+        }
+    </script>
+
+</body>
+</html>
