@@ -145,3 +145,52 @@
                 currency: 'IDR', 
                 minimumFractionDigits: 0 
             }).format(angka);
+        }
+
+        function calculateInfaq() {
+            const incomeInput = document.getElementById('income').value;
+            
+            if (incomeInput === '' || incomeInput < 0) {
+                alert('Silakan masukkan nominal penghasilan yang valid.');
+                return;
+            }
+
+            const income = parseFloat(incomeInput);
+
+            // 1. Kalkulasi ITB
+            const itb = 50000;
+
+            // 2. Kalkulasi IWB berdasarkan kondisi baru
+            let iwb = 0;
+            let labelIwbText = "";
+            
+            if (income < 3500000) {
+                iwb = 0;
+                labelIwbText = "IWB (0%):";
+            } else if (income < 8000000) {
+                iwb = income * 0.015;
+                labelIwbText = "IWB (1,5%):";
+            } else {
+                iwb = income * 0.04;
+                labelIwbText = "IWB (4%):";
+            }
+
+            // 3. Kalkulasi SS
+            const ss = income * 0.01;
+
+            // Total
+            const total = itb + iwb + ss;
+
+            // Tampilkan ke layar
+            document.getElementById('resItb').innerText = formatRupiah(itb);
+            document.getElementById('labelIwb').innerText = labelIwbText;
+            document.getElementById('resIwb').innerText = formatRupiah(iwb);
+            document.getElementById('resSs').innerText = formatRupiah(ss);
+            document.getElementById('resTotal').innerText = formatRupiah(total);
+
+            document.getElementById('resultBox').style.display = 'block';
+        }
+    </script>
+
+</body>
+</html>
